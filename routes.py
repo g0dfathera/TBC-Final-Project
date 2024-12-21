@@ -5,7 +5,7 @@ import requests
 from db import *
 from logins import admin_required
 from flask_login import login_user, logout_user, login_required
-from nmapscan import run_nmap_scan
+from nmapscan import *
 from whois import *
 
 @app.route("/whois", methods=["GET", "POST"])
@@ -69,10 +69,22 @@ def nmap_scan():
 @app.route("/history")
 @login_required
 def view_history():
-    # Paginate results, 5 per page
-    page = request.args.get('page', 1, type=int)  # Get current page number from the query string
-    history = SearchHistory.query.filter_by(user_id=current_user.id).paginate(page=page, per_page=3, error_out=False)  # Correct arguments
+    try:
+        # Ensure the page is an integer and provide a fallback to 1 if it's invalid
+        page = request.args.get('page', 1, type=int)  # Get current page number from the query string
 
+        # Query the history, limiting results to 3 per page
+        history = SearchHistory.query.filter_by(user_id=current_user.id).paginate(page=page, per_page=3, error_out=False)
+
+        if not history.items:
+            flash("No history found.", "info")
+
+    except Exception as e:
+        # Handle any unexpected errors gracefully
+        flash(f"An error occurred while retrieving your history: {str(e)}", "danger")
+        history = None
+
+    # Return the template with the history
     return render_template("history.html", history=history)
 
 
