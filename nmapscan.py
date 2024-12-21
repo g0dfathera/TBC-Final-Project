@@ -1,34 +1,52 @@
 import nmap
+import ipaddress
+
+def is_internal_ip(target_ip):
+    try:
+        # Define the private IP address ranges
+        private_networks = [
+            ipaddress.IPv4Network("10.0.0.0/8"),           # 10.x.x.x
+            ipaddress.IPv4Network("172.16.0.0/12"),        # 172.16.x.x - 172.31.x.x
+            ipaddress.IPv4Network("192.168.0.0/16"),       # 192.168.x.x
+            ipaddress.IPv4Network("169.254.0.0/16")        # Link-local addresses (169.254.x.x)
+        ]
+
+        # Convert the target IP to an IPv4Address object
+        ip = ipaddress.IPv4Address(target_ip)
+
+        # Check if the IP is within any of the private networks
+        for network in private_networks:
+            if ip in network:
+                return True
+        return False
+    except ValueError:
+        # If the IP address is invalid (not a valid IPv4 address)
+        return False
+
 
 def run_nmap_scan(target_ip, scan_depth):
+    # Check if the target IP is part of an internal network
+    if is_internal_ip(target_ip):
+        return "Error: Scanning internal networks (private IPs) is not allowed."
+
+    nm = nmap.PortScanner()
+
     try:
-        # Initialize nmap PortScanner
-        nm = nmap.PortScanner()
+        # Modify the scan based on depth
+        if scan_depth == "basic":
+            nm.scan(target_ip)
+        elif scan_depth == "service":
+            nm.scan(target_ip, arguments="-sV")  # -sV flag for version detection
+        elif scan_depth == "full":
+            nm.scan(target_ip, arguments="-A")  # -A for OS detection, version, script scanning, and traceroute
 
-        # Running the nmap scan with version detection (-sV) and specified port range
-        nm.scan(target_ip, scan_depth, '-sV')
-        
-        # Extracting scan result data
-        scan_result = nm[target_ip]
-        
-        # Output the basic scan info
-        print(f"Scan completed on: {scan_result['hostnames'][0]['name'] if 'hostnames' in scan_result else 'Unknown Hostname'}")
-        print(f"Host IP: {scan_result['addresses']['ipv4']}")
-        print(f"Host Status: {scan_result['status']['state']}")
-        print(f"Scan Time: {nm.command_line()}")
-        
-        # Iterate over open TCP ports and display their information
-        print("Open Ports and Services:")
-        for port, port_data in scan_result['tcp'].items():
-            if port_data['state'] == 'open':
-                service_name = port_data['name']
-                service_product = port_data.get('product', 'Unknown')
-                print(f"  Port {port}: {service_name} ({service_product})")
-
-        # Return the parsed scan result if needed for further processing
-        return scan_result
-
-    except nmap.nmap.PortScannerError as e:
-        print(f"PortScannerError: {e}")
+        # Return the results as a dictionary or formatted string
+        return nm.all_hosts(), nm[target_ip]
     except Exception as e:
-        print(f"Error: {e}")
+        return f"Error: {e}"
+
+# Example usage
+target_ip = "example.com"  # Replace with your target IP or hostname
+scan_depth = "full"  # Options: "basic", "service", "full"
+
+scan_result = run_nmap_scan(target_ip, scan_depth)
