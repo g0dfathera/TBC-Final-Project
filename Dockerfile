@@ -1,45 +1,37 @@
-# Use a Python image as a base image
-FROM python:3.9-slim
+# Use an official Node.js image as the base image
+FROM node:16
 
-# Install system dependencies required for both Python and Node.js
+# Install necessary system dependencies (e.g., nmap, Python, etc.)
 RUN apt-get update && apt-get install -y \
-    build-essential \
-    libssl-dev \
-    libffi-dev \
-    python3-dev \
-    curl \
-    gnupg2 \
-    lsb-release \
-    apt-transport-https \
-    ca-certificates \
-    git \
-    wget \
+    nmap \
+    python3-pip \
     && rm -rf /var/lib/apt/lists/*
-
-# Install Node.js (You can adjust the version as necessary)
-RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - && \
-    apt-get install -y nodejs
-
-# Install Yarn (for Node.js package management)
-RUN npm install -g yarn
 
 # Set the working directory inside the container
 WORKDIR /app
 
-# Copy all necessary files (including render-build.sh) into the container
-COPY . /app
+# Copy the package.json and yarn.lock (if exists) to install node dependencies first
+COPY package.json yarn.lock /app/
 
-# Install Python dependencies
-RUN pip3 install -r requirements.txt
-
-# Install Node.js dependencies (yarn will be used)
+# Install the Node.js dependencies using Yarn
 RUN yarn install
 
-# Run render-build.sh after dependencies are installed (make sure it exists)
-RUN sh render-build.sh
+# Install Python dependencies (if any)
+COPY requirements.txt /app/
+RUN pip3 install -r requirements.txt
 
-# Expose the port that your app will run on
-EXPOSE 5000
+# Copy the rest of your application code to the container
+COPY . /app/
 
-# Define the command to run your app (example for Flask)
-CMD ["gunicorn", "app:app"]
+# Copy the render-build.sh script to the container and make it executable
+COPY render-build.sh /app/
+RUN chmod +x /app/render-build.sh
+
+# Run the render-install.sh script
+RUN sh /app/render-build.sh
+
+# Expose the port your app runs on (replace with the correct port if necessary)
+EXPOSE 3000
+
+# Define the command to run your application (e.g., using yarn start)
+CMD ["yarn", "start"]
