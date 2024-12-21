@@ -1,6 +1,0 @@
-services:
-  - type: web
-    name: your-app-name
-    env: docker
-    buildCommand: ""
-    startCommand: "docker run -p 3000:3000 your-app-name"
