@@ -1,0 +1,185 @@
+{% extends "base.html" %} {% block title %} Vulnerability Report {% endblock %}
+{% block content %}
+
+<header class="text-center mb-4">
+    <h1 class="text-danger">Report a Security Vulnerability</h1>
+    <p class="lead">
+        If you have discovered a security vulnerability, please provide the
+        details below to help improve system security.
+    </p>
+</header>
+
+<section>
+    <h2 class="my-4">Vulnerability Report Overview</h2>
+    <p>Here are some common types of vulnerabilities often reported:</p>
+    <ul class="list-group">
+        <li class="list-group-item">SQL Injection</li>
+        <li class="list-group-item">Cross-site Scripting (XSS)</li>
+        <li class="list-group-item">Remote Code Execution (RCE)</li>
+        <li class="list-group-item">Buffer Overflow</li>
+        <li class="list-group-item">Privilege Escalation</li>
+    </ul>
+</section>
+
+<section class="my-5">
+    <h2 class="text-center mb-4">Examples of Common Vulnerabilities</h2>
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <img
+                    src="../static/1673879028-bedrohungen_code_injection_de_en_transparent_desktop.png"
+                    class="card-img-top"
+                    alt="SQL Injection"
+                />
+                <div class="card-body">
+                    <h5 class="card-title">SQL Injection</h5>
+                    <p class="card-text">
+                        SQL Injection occurs when attackers are able to inject
+                        malicious SQL code into input fields, gaining
+                        unauthorized access to the system’s database.
+                    </p>
+                    <a
+                        href="https://owasp.org/www-community/attacks/SQL_Injection"
+                        class="btn btn-primary"
+                        target="_blank"
+                        >Learn More</a
+                    >
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <img
+                    src="../static/xss.png"
+                    class="card-img-top"
+                    alt="Cross-site Scripting"
+                />
+                <div class="card-body">
+                    <h5 class="card-title">Cross-site Scripting (XSS)</h5>
+                    <p class="card-text">
+                        XSS allows attackers to inject malicious scripts into
+                        web pages, which are then executed in the context of
+                        another user's session, often leading to data theft.
+                    </p>
+                    <a
+                        href="https://owasp.org/www-community/attacks/xss/"
+                        class="btn btn-primary"
+                        target="_blank"
+                        >Learn More</a
+                    >
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <img
+                    src="../static/RCE.jpg"
+                    class="card-img-top"
+                    alt="Remote Code Execution"
+                />
+                <div class="card-body">
+                    <h5 class="card-title">Remote Code Execution (RCE)</h5>
+                    <p class="card-text">
+                        RCE allows attackers to execute arbitrary code on the
+                        server, potentially gaining control over it and
+                        performing malicious actions.
+                    </p>
+                    <a
+                        href="https://www.imperva.com/learn/application-security/remote-code-execution/"
+                        class="btn btn-primary"
+                        target="_blank"
+                        >Learn More</a
+                    >
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="my-5">
+    <h2 class="text-center mb-4">How to Report a Vulnerability</h2>
+
+    <div class="alert alert-info">
+        <h4 class="alert-heading">1. Provide Vulnerability Details</h4>
+        <p>
+            Clearly describe the vulnerability, including the type (e.g., SQL
+            Injection, XSS), and where it was found. Provide steps to reproduce
+            the issue.
+        </p>
+    </div>
+
+    <div class="alert alert-warning">
+        <h4 class="alert-heading">2. Impact Assessment</h4>
+        <p>
+            Describe the potential impact if the vulnerability is exploited. For
+            example, unauthorized data access, privilege escalation, etc.
+        </p>
+    </div>
+
+    <div class="alert alert-success">
+        <h4 class="alert-heading">3. Mitigation Suggestions</h4>
+        <p>
+            If possible, include suggestions on how to fix the vulnerability.
+            For example, "Use parameterized queries to prevent SQL injection."
+            This can expedite the resolution process.
+        </p>
+    </div>
+</section>
+
+<section class="my-5">
+    <h2 class="text-center mb-4">Sample Vulnerability Report</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Field</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Vulnerability Type</strong></td>
+                <td>SQL Injection</td>
+            </tr>
+            <tr>
+                <td><strong>Details</strong></td>
+                <td>
+                    The login form at <code>/login</code> does not properly
+                    sanitize user input, allowing attackers to inject malicious
+                    SQL code and bypass authentication.
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Impact</strong></td>
+                <td>
+                    Allows unauthorized access to the system and potential data
+                    exposure.
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Suggested Fix</strong></td>
+                <td>
+                    Use prepared statements or parameterized queries to prevent
+                    SQL injection.
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+<section class="my-5">
+    <div class="alert alert-info text-center">
+        <h4 class="alert-heading">Important:</h4>
+        <p>
+            If you believe you've discovered a serious vulnerability, please
+            report it immediately to the relevant security team. Your prompt
+            action is crucial to help protect users and the system.
+        </p>
+    </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+
+{% endblock %}

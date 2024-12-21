@@ -1,0 +1,60 @@
+{% extends "base.html" %} {% block title %} Cybersecurity Tips and News {%
+endblock %} {% block content %}
+<header class="my-5">
+    <h1 class="text-center text-primary">Cybersecurity Tips and News</h1>
+</header>
+
+<div class="container">
+    <div class="row">
+        <!-- Cybersecurity Tips Section -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h3 class="card-title text-center mb-3">
+                        Cybersecurity Tips
+                    </h3>
+                    <ul class="list-group">
+                        {% for tip in tips %}
+                        <li class="list-group-item">
+                            <i class="fas fa-lightbulb text-warning"></i> {{ tip
+                            }}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Latest Cybersecurity News Section -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h3 class="card-title text-center mb-3">
+                        Latest Cybersecurity News
+                    </h3>
+                    <ul class="list-group">
+                        {% for article in articles %}
+                        <li class="list-group-item">
+                            <a
+                                href="{{ article.url }}"
+                                target="_blank"
+                                class="h5 text-decoration-none text-dark"
+                            >
+                                <i class="fas fa-newspaper"></i> {{
+                                article.title }}
+                            </a>
+                            <br />
+                            <small class="text-muted"
+                                >{{ article.publishedAt }}</small
+                            >
+                            <p class="mt-2">{{ article.description }}</p>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

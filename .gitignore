@@ -1,0 +1,21 @@
+# Ignore configuration files containing sensitive data
+config.py
+.env
+
+# Python bytecode files
+*.pyc
+__pycache__/
+
+# Virtual environment folders
+venv/
+env/
+
+# Log files
+*.log
+
+# IDE/editor files
+.vscode/
+.idea/
+
+# Flask migrations
+migrations/

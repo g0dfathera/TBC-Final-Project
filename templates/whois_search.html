@@ -1,0 +1,57 @@
+{% extends 'base.html' %} {% block content %}
+<div class="container mt-5">
+    <!-- Page Header -->
+    <h1 class="text-center mb-4 display-4 font-weight-bold text-primary">
+        WHOIS Search
+    </h1>
+
+    <!-- WHOIS Search Form -->
+    <form method="POST" action="{{ url_for('whois_search') }}">
+        <div class="card shadow-lg rounded-lg">
+            <div class="card-body">
+                <h4 class="card-title mb-4 text-dark">
+                    Configure Your WHOIS Search
+                </h4>
+
+                <div class="form-group">
+                    <label for="target_ip" class="h5">
+                        Target IP/Web Address
+                    </label>
+                    <input
+                        type="text"
+                        class="form-control form-control-lg rounded-pill"
+                        id="target_ip"
+                        name="target_ip"
+                        placeholder="Example: 8.8.8.8 or google.com"
+                        required
+                    />
+                    <small class="form-text text-muted">
+                        Enter an IP or domain to look up (e.g. 8.8.8.8 or
+                        google.com).
+                    </small>
+                </div>
+
+                <button
+                    type="submit"
+                    class="btn btn-primary btn-lg btn-block rounded-pill mt-4"
+                >
+                    Run WHOIS Lookup
+                </button>
+            </div>
+        </div>
+    </form>
+
+    <!-- Display WHOIS Search Results -->
+    {% if search_result %}
+    <hr class="my-4" />
+    <div class="card mt-4 shadow-lg rounded-lg">
+        <div class="card-body">
+            <h4 class="card-title text-dark">WHOIS Lookup Results</h4>
+            <pre class="bg-light p-4 rounded border border-info">
+{{ search_result }}
+            </pre>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

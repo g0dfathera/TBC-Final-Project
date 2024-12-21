@@ -1,0 +1,95 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-lg">
+    <div class="container">
+        <a class="navbar-brand" href="/">
+            <i class="bi bi-shield-lock-fill"></i> Penetration Testing
+        </a>
+        <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+        >
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a
+                        class="nav-link"
+                        href="/security-vulnerabilities"
+                        style="transition: color 0.3s"
+                        >Security Vulnerabilities</a
+                    >
+                </li>
+                <li class="nav-item">
+                    <a
+                        class="nav-link"
+                        href="/penetration-tools"
+                        style="transition: color 0.3s"
+                        >Penetration Tools</a
+                    >
+                </li>
+                {% if current_user.is_authenticated %}
+                <li class="nav-item">
+                    <a
+                        class="nav-link"
+                        href="/nmap"
+                        style="transition: color 0.3s"
+                        >Nmap Scan</a
+                    >
+                </li>
+                <li class="nav-item">
+                    <a
+                        class="nav-link"
+                        href="/whois"
+                        style="transition: color 0.3s"
+                        >WHOIS Scan</a
+                    >
+                </li>
+                <li class="nav-item">
+                    <a
+                        class="nav-link"
+                        href="/ipcheck/8.8.8.8"
+                        style="transition: color 0.3s"
+                        >IP Check</a
+                    >
+                </li>
+                <!-- Add User History button here -->
+                <li class="nav-item">
+                    <a
+                        class="nav-link"
+                        href="/history"
+                        style="transition: color 0.3s"
+                        >User History</a
+                    >
+                </li>
+                {% endif %}
+            </ul>
+            <div class="ms-auto">
+                <ul class="navbar-nav">
+                    {% if current_user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('logout') }}">
+                            <i class="bi bi-box-arrow-right"></i> Logout
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/register">
+                            <i class="bi bi-person-plus-fill"></i> Register
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login">
+                            <i class="bi bi-box-arrow-in-right"></i> Login
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>
