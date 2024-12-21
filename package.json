@@ -1,17 +1,16 @@
 {
   "name": "TBC-Final-Project",
   "version": "1.0.0",
-  "description": "A project for TBC final exam, involving nmap and Python dependencies",
+  "description": "Your project description",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "install": "pip3 install -r requirements.txt && sh install_nmap.sh"
+    "install": "sh render-build.sh"
   },
   "dependencies": {
     "express": "^4.17.1"
   },
-  "devDependencies": {
-  },
+  "devDependencies": {},
   "author": "Your Name",
   "license": "MIT"
 }
