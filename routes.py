@@ -5,7 +5,7 @@ import requests
 from db import *
 from logins import admin_required
 from flask_login import login_user, logout_user, login_required
-from nmap import run_nmap_scan
+from nmapscan import run_nmap_scan
 from whois import *
 
 @app.route("/whois", methods=["GET", "POST"])
