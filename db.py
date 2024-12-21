@@ -2,6 +2,7 @@ from config import *
 from datetime import datetime
 
 class SearchHistory(db.Model):
+    __tablename__ = 'search_history'
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # Link to User model
     target_ip = db.Column(db.String(120), nullable=False)  # IP address searched
