@@ -49,16 +49,16 @@ def nmap_scan():
             # Run the Nmap scan with the selected scan depth
             scan_result = run_nmap_scan(target_ip, scan_depth)
 
-            # Save search history
             history = SearchHistory(
-                user_id=current_user.id,  # Link the history to the current user
+                user_id=current_user.id,
                 target_ip=target_ip,
                 scan_depth=scan_depth,
-                result=scan_result
+                result=result,
+                timestamp=datetime.utcnow()
             )
+
             db.session.add(history)
             db.session.commit()
-
             # Flash a message indicating scan result
             flash(f"Scan completed for {target_ip} with depth: {scan_depth}!", "success")
         else:
