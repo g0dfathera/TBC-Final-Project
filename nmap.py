@@ -1,8 +1,7 @@
-import subprocess
+import nmap
 import ipaddress
 
 def is_internal_ip(target_ip):
-
     try:
         # Define the private IP address ranges
         private_networks = [
@@ -26,27 +25,37 @@ def is_internal_ip(target_ip):
 
 
 def run_nmap_scan(target_ip, scan_depth):
-
     # Check if the target IP is part of an internal network
     if is_internal_ip(target_ip):
         return "Error: Scanning internal networks (private IPs) is not allowed."
+    
+    nm = nmap.PortScanner()
 
     try:
-        # Start with a basic Nmap command
-        command = ["nmap"]
-
-        # Modify the command based on the scan depth
+        # Modify the scan based on depth
         if scan_depth == "basic":
-            command.append(target_ip)
+            nm.scan(target_ip)
         elif scan_depth == "service":
-            command.extend(["-sV", target_ip])  # -sV flag for version detection
+            nm.scan(target_ip, arguments="-sV")  # -sV flag for version detection
+        elif scan_depth == "full":
+            nm.scan(target_ip, arguments="-A")  # -A for OS detection, version, script scanning, and traceroute
 
-        # Run the Nmap command and capture the output
-        result = subprocess.run(command, capture_output=True, text=True, check=True)
+        # Return the results as a dictionary or formatted string
+        return nm.all_hosts(), nm[target_ip]
+    except Exception as e:
+        return f"Error: {e}"
 
-        return result.stdout
-    except subprocess.CalledProcessError as e:
-        # Handle specific error for OS scan requiring root privileges
-        if "TCP/IP fingerprinting" in e.stderr:
-            return "Error: OS scan requires root privileges."
-        return f"Error: {e.stderr}"
+# Example usage
+target_ip = "example.com"  # Replace with your target IP or hostname
+scan_depth = "full"  # Options: "basic", "service", "full"
+
+scan_result = run_nmap_scan(target_ip, scan_depth)
+
+# Format the result for better readability
+if isinstance(scan_result, tuple):
+    hosts, result = scan_result
+    print(f"Hosts found: {hosts}")
+    print(f"Scan result for {target_ip}:")
+    print(result)
+else:
+    print(scan_result)
