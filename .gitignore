@@ -1,5 +1,4 @@
 # Ignore configuration files containing sensitive data
-config.py
 .env
 
 # Python bytecode files
