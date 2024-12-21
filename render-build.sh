@@ -1,23 +1,33 @@
-#!/usr/bin/env bash
+#!/bin/bash
 # Exit on error
-set -o errexit
+set -e
 
-# Install Python dependencies (assuming you have a requirements.txt)
+# Install Python dependencies
 echo "Installing Python dependencies..."
 pip3 install -r requirements.txt
 
-# Install nmap (only if not already installed)
+# Check if nmap is installed, if not, install it
 if ! command -v nmap &> /dev/null
 then
     echo "nmap not found, installing nmap..."
-    apt-get update
-    apt-get install -y nmap
+    apt-get update && apt-get install -y nmap
 else
     echo "nmap is already installed"
 fi
 
-# Any additional setup steps can be added here (if necessary)
-# For example, setting up environment variables, additional packages, etc.
+# Check if yarn is installed, if not, install it
+if ! command -v yarn &> /dev/null
+then
+    echo "Yarn not found, installing Yarn..."
+    npm install -g yarn
+else
+    echo "Yarn is already installed"
+fi
 
-# Output a message indicating the script has finished
-echo "Render installation script has completed successfully!"
+# Run any additional commands or build steps you need
+echo "Running additional build steps..."
+
+# If you need to run any other commands, you can add them below
+# For example, if you want to run a custom build script or do something else
+
+# Add your custom build steps here
