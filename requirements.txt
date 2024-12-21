@@ -27,3 +27,4 @@ Werkzeug
 WTForms
 python-dotenv
 gunicorn
+python-nmap
