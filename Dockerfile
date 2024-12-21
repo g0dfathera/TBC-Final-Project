@@ -10,10 +10,13 @@ RUN apt-get update && apt-get install -y \
 # Set the working directory inside the container
 WORKDIR /app
 
-# Copy the package.json and yarn.lock (if exists) to install node dependencies first
-COPY package.json yarn.lock /app/
+# Copy package.json to the container
+COPY package.json /app/
 
-# Install dependencies using npm if no yarn.lock file exists
+# Check if yarn.lock exists and copy it if it does
+COPY yarn.lock /app/ || echo "No yarn.lock file found"
+
+# Install dependencies using yarn or npm
 RUN if [ -f yarn.lock ]; then yarn install; else npm install; fi
 
 # Install Python dependencies (if any)
