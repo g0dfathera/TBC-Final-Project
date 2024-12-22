@@ -1,8 +1,6 @@
 import hashlib
 import requests
-from werkzeug.utils import secure_filename
 import os
-from db import db, FileHash, User
 import base64
 
 # VirusTotal API Key and URL
