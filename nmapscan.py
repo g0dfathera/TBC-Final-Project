@@ -12,10 +12,8 @@ def is_internal_ip(target_ip):
             ipaddress.IPv4Network("169.254.0.0/16")        # Link-local addresses (169.254.x.x)
         ]
 
-        # Convert the target IP to an IPv4Address object
         ip = ipaddress.IPv4Address(target_ip)
 
-        # Check if the IP is within any of the private networks
         for network in private_networks:
             if ip in network:
                 return True
@@ -32,10 +30,8 @@ def run_nmap_scan(target_ip, scan_depth):
         return "Error: Scanning internal networks (private IPs) is not allowed."
 
     try:
-        # Start with a basic Nmap command
         command = ["nmap"]
 
-        # Modify the command based on the scan depth
         if scan_depth == "basic":
             command.append(target_ip)
         elif scan_depth == "service":
@@ -46,7 +42,4 @@ def run_nmap_scan(target_ip, scan_depth):
 
         return result.stdout
     except subprocess.CalledProcessError as e:
-        # Handle specific error for OS scan requiring root privileges
-        if "TCP/IP fingerprinting" in e.stderr:
-            return "Error: OS scan requires root privileges."
         return f"Error: {e.stderr}"
