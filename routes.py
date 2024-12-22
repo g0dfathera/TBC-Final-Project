@@ -7,6 +7,37 @@ from logins import admin_required
 from flask_login import login_user, logout_user, login_required
 from nmapscan import *
 from whois import *
+from virustotal import *
+from flask import current_app
+from datetime import datetime
+from urllib.parse import urlparse
+
+@app.template_filter('datetime')
+def datetime_filter(value, format='%Y-%m-%d %H:%M:%S'):
+    if isinstance(value, datetime):
+        return value.strftime(format)
+    return value
+
+@app.route("/virustotal/url", methods=["GET", "POST"])
+@login_required
+def virustotal_url():
+    if request.method == "POST":
+        url = request.form.get("url")
+        result = scan_url(url)  # Assuming scan_url returns a result as a dictionary
+        if result:
+                # Extract the timestamp and convert it
+                timestamp = result['data']['attributes']['last_analysis_date']
+                last_analysis_datetime = datetime.utcfromtimestamp(timestamp)
+
+                # Pass the result along with the converted datetime to the template
+                return render_template("virustotal_url_result.html", result=result, last_analysis_datetime=last_analysis_datetime)
+        else:
+            flash("Failed to scan URL.", "danger")
+    else:
+        flash("Please enter a URL.", "danger")
+
+    return render_template("virustotal_url.html")
+
 
 @app.route("/whois", methods=["GET", "POST"])
 @login_required
@@ -39,7 +70,7 @@ def whois_search():
 @app.route("/nmap", methods=["GET", "POST"])
 @login_required
 def nmap_scan():
-    scan_result = None
+    result = None  # Initialize result as None, since you want to use 'result'
 
     if request.method == "POST":
         target_ip = request.form.get("target_ip")
@@ -47,13 +78,13 @@ def nmap_scan():
 
         if target_ip and scan_depth:
             # Run the Nmap scan with the selected scan depth
-            scan_result = run_nmap_scan(target_ip, scan_depth)
+            result = run_nmap_scan(target_ip, scan_depth)  # Store the result in 'result'
 
             history = SearchHistory(
                 user_id=current_user.id,
                 target_ip=target_ip,
                 scan_depth=scan_depth,
-                result=result,
+                result=result,  # Now using 'result' here
                 timestamp=datetime.utcnow()
             )
 
@@ -64,7 +95,7 @@ def nmap_scan():
         else:
             flash("Please provide both IP address and scan depth.", "danger")
 
-    return render_template("nmap_scan.html", scan_result=scan_result)
+    return render_template("nmap_scan.html", scan_result=result)  # Pass 'result' to the template
 
 @app.route("/history")
 @login_required
@@ -86,9 +117,6 @@ def view_history():
 
     # Return the template with the history
     return render_template("history.html", history=history)
-
-
-
 
 # Admin route to view users
 @app.route("/admin/users")
@@ -115,11 +143,10 @@ def edit_user(user_id):
     form = EditUserForm() # Assuming you have a form for editing the user
 
     if form.validate_on_submit():
-        # If the form is submitted, update the user's information
-        user.email = form.email.data  # Example: Update the email
+        user.email = form.email.data 
         db.session.commit()  # Save the changes to the database
         flash("User updated successfully!", "success")
-        return redirect(url_for("view_users"))  # Redirect to the user list page
+        return redirect(url_for("view_users"))  
 
     # Pre-fill the form with existing user data
     form.email.data = user.email
