@@ -1,7 +1,8 @@
-import nmap
+import subprocess
 import ipaddress
 
 def is_internal_ip(target_ip):
+
     try:
         # Define the private IP address ranges
         private_networks = [
@@ -25,28 +26,27 @@ def is_internal_ip(target_ip):
 
 
 def run_nmap_scan(target_ip, scan_depth):
+
     # Check if the target IP is part of an internal network
     if is_internal_ip(target_ip):
         return "Error: Scanning internal networks (private IPs) is not allowed."
 
-    nm = nmap.PortScanner()
-
     try:
-        # Modify the scan based on depth
+        # Start with a basic Nmap command
+        command = ["nmap"]
+
+        # Modify the command based on the scan depth
         if scan_depth == "basic":
-            nm.scan(target_ip)
+            command.append(target_ip)
         elif scan_depth == "service":
-            nm.scan(target_ip, arguments="-sV")  # -sV flag for version detection
-        elif scan_depth == "full":
-            nm.scan(target_ip, arguments="-A")  # -A for OS detection, version, script scanning, and traceroute
+            command.extend(["-sV", target_ip])  # -sV flag for version detection
 
-        # Return the results as a dictionary or formatted string
-        return nm.all_hosts(), nm[target_ip]
-    except Exception as e:
-        return f"Error: {e}"
+        # Run the Nmap command and capture the output
+        result = subprocess.run(command, capture_output=True, text=True, check=True)
 
-# Example usage
-target_ip = "example.com"  # Replace with your target IP or hostname
-scan_depth = "full"  # Options: "basic", "service", "full"
-
-scan_result = run_nmap_scan(target_ip, scan_depth)
+        return result.stdout
+    except subprocess.CalledProcessError as e:
+        # Handle specific error for OS scan requiring root privileges
+        if "TCP/IP fingerprinting" in e.stderr:
+            return "Error: OS scan requires root privileges."
+        return f"Error: {e.stderr}"
