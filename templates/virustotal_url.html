@@ -1,0 +1,41 @@
+{% extends "base.html" %} {% block title %}URL Scan - VirusTotal{% endblock %}
+{% block content %}
+<div class="container my-5">
+    <div class="card border-light shadow-sm">
+        <div class="card-header text-center bg-white">
+            <h4 class="text-primary mb-0">Scan URL with VirusTotal</h4>
+        </div>
+        <div class="card-body">
+            <form method="POST">
+                <div class="mb-4">
+                    <label for="url" class="form-label fs-5 text-muted"
+                        >Enter URL to Scan:</label
+                    >
+                    <div class="input-group">
+                        <span
+                            class="input-group-text border-0"
+                            style="background-color: #f1f9fc; color: #007bff"
+                        >
+                            <i class="fas fa-link"></i>
+                        </span>
+                        <input
+                            type="url"
+                            class="form-control border-0 shadow-sm"
+                            id="url"
+                            name="url"
+                            placeholder="https://example.com/"
+                            required
+                            style="background-color: #f1f9fc; color: #495057"
+                        />
+                    </div>
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        Scan URL
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
