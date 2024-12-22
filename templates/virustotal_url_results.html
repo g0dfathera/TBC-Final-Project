@@ -1,0 +1,91 @@
+<!-- virustotal_url_result.html -->
+{% extends "base.html" %} {% block title %}VirusTotal URL Scan Result{% endblock
+%} {% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">
+        Scan Results for URL:
+        <a href="{{ result['data']['attributes']['url'] }}" target="_blank"
+            >{{ result['data']['attributes']['url'] }}</a
+        >
+    </h2>
+
+    <div class="card">
+        <div class="card-header">
+            <h4>Analysis Summary</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <p>
+                        <strong>Status:</strong>
+                        {% if
+                        result['data']['attributes']['last_analysis_stats']['malicious']
+                        > 0 %}
+                        <span class="badge bg-danger">Malicious</span>
+                        {% else %}
+                        <span class="badge bg-success">Clean</span>
+                        {% endif %}
+                    </p>
+
+                    <p>
+                        <strong>Last Analysis Date:</strong>
+                        {{ result['data']['attributes']['last_analysis_date'] |
+                        datetime }}
+                    </p>
+
+                    <p>
+                        <strong>Total Engines:</strong>
+                        {{
+                        result['data']['attributes']['last_analysis_stats']['total']
+                        }}
+                    </p>
+
+                    <p>
+                        <strong>Malicious Engines:</strong>
+                        {{
+                        result['data']['attributes']['last_analysis_stats']['malicious']
+                        }}
+                    </p>
+
+                    <p>
+                        <strong>Undetected Engines:</strong>
+                        {{
+                        result['data']['attributes']['last_analysis_stats']['undetected']
+                        }}
+                    </p>
+                </div>
+
+                <div class="col-md-6">
+                    <h5>Engine Analysis Breakdown</h5>
+                    <ul class="list-group">
+                        {% for engine, stats in
+                        result['data']['attributes']['last_analysis_results'].items()
+                        %}
+                        <li
+                            class="list-group-item {% if stats['category'] == 'malicious' %}list-group-item-danger{% elif stats['category'] == 'undetected' %}list-group-item-secondary{% else %}list-group-item-success{% endif %}"
+                        >
+                            <strong>{{ engine }}</strong> - {% if
+                            stats['category'] == 'malicious' %}
+                            <span class="text-danger">Malicious</span>
+                            {% elif stats['category'] == 'undetected' %}
+                            <span class="text-muted">Undetected</span>
+                            {% else %}
+                            <span class="text-success">Clean</span>
+                            {% endif %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <a
+                href="https://www.virustotal.com/gui/url/{{ result['data']['id'] }}"
+                class="btn btn-primary"
+                target="_blank"
+                >View Full Report</a
+            >
+        </div>
+    </div>
+</div>
+{% endblock %}
