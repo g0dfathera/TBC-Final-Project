@@ -14,5 +14,7 @@ from routes import (
     ipcheck,
     security_vulnerabilities,
     penetration_tools,
-    load_user
+    load_user,
+    virustotal_url,
+    virustotal_url_result,
 )
