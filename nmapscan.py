@@ -1,7 +1,8 @@
-import nmap
+import subprocess
 import ipaddress
 
 def is_internal_ip(target_ip):
+
     try:
         # Define the private IP address ranges
         private_networks = [
@@ -18,23 +19,27 @@ def is_internal_ip(target_ip):
                 return True
         return False
     except ValueError:
+        # If the IP address is invalid (not a valid IPv4 address)
         return False
 
 
 def run_nmap_scan(target_ip, scan_depth):
+
+    # Check if the target IP is part of an internal network
     if is_internal_ip(target_ip):
         return "Error: Scanning internal networks (private IPs) is not allowed."
 
-    nm = nmap.PortScanner()
-
     try:
-        if scan_depth == "basic":
-            # Run a fast scan with fewer ports (-F flag)
-            result = nm.scan(target_ip, arguments="-F")
-        elif scan_depth == "service":
-            # Run a scan with service version detection (-T4 -sV flags)
-            result = nm.scan(target_ip, arguments="-T4 -sV")
+        command = ["nmap"]
 
-        return result
-    except Exception as e:
-        return f"Error: {str(e)}"
+        if scan_depth == "basic":
+            command.append(target_ip)
+        elif scan_depth == "service":
+            command.extend(["-sV", target_ip])  # -sV flag for version detection
+
+        # Run the Nmap command and capture the output
+        result = subprocess.run(command, capture_output=True, text=True, check=True)
+
+        return result.stdout
+    except subprocess.CalledProcessError as e:
+        return f"Error: {e.stderr}"
