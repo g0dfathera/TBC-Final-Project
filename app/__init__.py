@@ -16,5 +16,4 @@ from routes import (
     penetration_tools,
     load_user,
     virustotal_url,
-    virustotal_url_result,
 )
