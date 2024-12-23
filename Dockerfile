@@ -9,11 +9,17 @@ RUN if command -v apt-get > /dev/null 2>&1; then \
         exit 1; \
     fi
 
+WORKDIR /app
+
+COPY requirements.txt /app/
+
 RUN pip install -r requirements.txt
 
-ENV FLASK_APP=app.py  
-ENV FLASK_ENV=production 
+COPY . /app/
 
-EXPOSE 5000 
+ENV FLASK_APP=app.py
+ENV FLASK_ENV=production
+
+EXPOSE 5000
 
 CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app:app"]
