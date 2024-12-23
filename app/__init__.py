@@ -15,5 +15,5 @@ from routes import (
     security_vulnerabilities,
     penetration_tools,
     load_user,
-    virustotal_url,
+    virustotal_url
 )
