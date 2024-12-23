@@ -19,13 +19,11 @@ def is_internal_ip(target_ip):
                 return True
         return False
     except ValueError:
-        # If the IP address is invalid (not a valid IPv4 address)
         return False
 
 
 def run_nmap_scan(target_ip, scan_depth):
 
-    # Check if the target IP is part of an internal network
     if is_internal_ip(target_ip):
         return "Error: Scanning internal networks (private IPs) is not allowed."
 
@@ -37,9 +35,10 @@ def run_nmap_scan(target_ip, scan_depth):
         elif scan_depth == "service":
             command.extend(["-sV", target_ip])  # -sV flag for version detection
 
-        # Run the Nmap command and capture the output
         result = subprocess.run(command, capture_output=True, text=True, check=True)
 
         return result.stdout
     except subprocess.CalledProcessError as e:
+        if "TCP/IP fingerprinting" in e.stderr:
+            return "Error: OS scan requires root privileges."
         return f"Error: {e.stderr}"
