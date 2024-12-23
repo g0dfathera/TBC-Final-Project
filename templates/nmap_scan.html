@@ -2,22 +2,24 @@
 <div class="container mt-5">
     <!-- Page Header -->
     <h1 class="text-center mb-4 display-4 font-weight-bold text-primary">
-        Nmap Scan
+        Nmap Scan Results
     </h1>
 
     <!-- Nmap Scan Form -->
     <form method="POST" action="{{ url_for('nmap_scan') }}">
-        <div class="card shadow-lg rounded-lg">
+        <div class="card shadow-lg rounded-lg border-primary">
             <div class="card-body">
-                <h4 class="card-title mb-4 text-dark">Configure Your Scan</h4>
+                <h4 class="card-title mb-4 text-dark font-weight-bold">
+                    Configure Your Scan
+                </h4>
 
                 <div class="form-group">
-                    <label for="target_ip" class="h5"
+                    <label for="target_ip" class="h5 text-primary"
                         >Target IP/Web Address</label
                     >
                     <input
                         type="text"
-                        class="form-control form-control-lg rounded-pill"
+                        class="form-control form-control-lg rounded-pill shadow-sm"
                         id="target_ip"
                         name="target_ip"
                         placeholder="Example: 8.8.8.8 or google.com"
@@ -30,9 +32,11 @@
                 </div>
 
                 <div class="form-group mt-4">
-                    <label for="scan_depth" class="h5">Select Scan Depth</label>
+                    <label for="scan_depth" class="h5 text-primary"
+                        >Select Scan Depth</label
+                    >
                     <select
-                        class="form-control form-control-lg rounded-pill"
+                        class="form-control form-control-lg rounded-pill shadow-sm"
                         id="scan_depth"
                         name="scan_depth"
                         required
@@ -50,7 +54,7 @@
 
                 <button
                     type="submit"
-                    class="btn btn-primary btn-lg btn-block rounded-pill mt-4"
+                    class="btn btn-primary btn-lg btn-block rounded-pill mt-4 shadow-sm"
                 >
                     Run Scan
                 </button>
@@ -61,14 +65,165 @@
     <!-- Display Scan Results -->
     {% if scan_result %}
     <hr class="my-4" />
-    <div class="card mt-4 shadow-lg rounded-lg">
+    <div class="card mt-4 shadow-lg rounded-lg border-info">
         <div class="card-body">
-            <h4 class="card-title text-dark">Scan Results</h4>
-            <pre class="bg-light p-4 rounded border border-info">
-{{ scan_result }}
-            </pre>
+            <h4 class="card-title text-dark font-weight-bold">Scan Results</h4>
+
+            {% if scan_result['scan'] %}
+            <p class="font-weight-bold">
+                Target: {{ scan_result['scan'].keys() | first }}
+            </p>
+            <p>
+                <strong>Status:</strong> {{
+                scan_result['scan'][scan_result['scan'].keys() |
+                first]['status']['state'] | capitalize }}
+            </p>
+            <p>
+                <strong>Reason:</strong> {{
+                scan_result['scan'][scan_result['scan'].keys() |
+                first]['status']['reason'] }}
+            </p>
+
+            <!-- Scan Info (Only show if available) -->
+            <div class="mt-4">
+                <h5 class="text-primary">Scan Information</h5>
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <strong>Scan Method:</strong> {{
+                        scan_result['nmap']['scaninfo']['tcp']['method'] or
+                        'N/A' }}
+                    </li>
+                    {% if scan_result['scanstats'] %}
+                    <li class="list-group-item">
+                        <strong>Elapsed Time:</strong> {{
+                        scan_result['scanstats']['elapsed'] if
+                        scan_result['scanstats'].get('elapsed') else 'N/A' }}
+                        seconds
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Total Hosts:</strong> {{
+                        scan_result['scanstats']['totalhosts'] if
+                        scan_result['scanstats'] else 'N/A' }}
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Up Hosts:</strong> {{
+                        scan_result['scanstats']['uphosts'] if
+                        scan_result['scanstats'] else 'N/A' }}
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Down Hosts:</strong> {{
+                        scan_result['scanstats']['downhosts'] if
+                        scan_result['scanstats'] else 'N/A' }}
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Scan Timestamp:</strong> {{
+                        scan_result['scanstats']['timestr'] if
+                        scan_result['scanstats'] else 'N/A' }}
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+
+            <!-- Open Ports Section -->
+            <h5 class="mt-4 mb-3 text-primary">Open Ports</h5>
+            <ul class="list-group">
+                {% for port, details in
+                scan_result['scan'][scan_result['scan'].keys() |
+                first]['tcp'].items() %} {% if details['state'] == 'open' %}
+                <li
+                    class="list-group-item d-flex justify-content-between align-items-center"
+                >
+                    <strong>Port {{ port }}</strong>
+                    <span class="badge badge-success badge-pill">
+                        {{ details['name'] if details['name'] else 'Unknown
+                        Service' }} -
+                        <span class="service-version">
+                            {{ details['product'] if details['product'] else
+                            'Unknown Product' }}
+                        </span>
+                    </span>
+                    <span class="badge badge-info badge-pill">
+                        Version:
+                        <span class="service-version"
+                            >{{ details['version'] if details['version'] else
+                            'Unknown Version' }}</span
+                        >
+                    </span>
+                    <span class="badge badge-secondary badge-pill">
+                        CPE:
+                        <span class="service-cpe"
+                            >{{ details['cpe'] if details['cpe'] else 'N/A'
+                            }}</span
+                        >
+                    </span>
+                    <p>
+                        <strong>Extra Info:</strong>
+                        <span class="extra-info"
+                            >{{ details['extrainfo'] if details['extrainfo']
+                            else 'None' }}</span
+                        >
+                    </p>
+                </li>
+                {% endif %} {% endfor %}
+            </ul>
+
+            <!-- Hostname Details -->
+            <div class="mt-4">
+                <h5 class="text-primary">Hostnames</h5>
+                <ul class="list-group">
+                    {% for hostname in
+                    scan_result['scan'][scan_result['scan'].keys() |
+                    first]['hostnames'] %}
+                    <li class="list-group-item">
+                        <strong>{{ hostname['type'] | capitalize }}:</strong> {{
+                        hostname['name'] }}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Vendor Information -->
+            <div class="mt-4">
+                <h5 class="text-primary">Vendor Information</h5>
+                {% if scan_result['scan'][scan_result['scan'].keys() |
+                first]['vendor'] %}
+                <ul class="list-group">
+                    {% for vendor, vendor_details in
+                    scan_result['scan'][scan_result['scan'].keys() |
+                    first]['vendor'].items() %}
+                    <li class="list-group-item">
+                        <strong>{{ vendor }}:</strong> {{ vendor_details }}
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p>No vendor information available.</p>
+                {% endif %}
+            </div>
+
+            {% else %}
+            <p>No open ports found or scan did not return results.</p>
+            {% endif %}
         </div>
     </div>
     {% endif %}
 </div>
+
+<!-- Custom CSS for visibility of important information -->
+<style>
+    .service-version,
+    .service-cpe,
+    .extra-info {
+        color: #000 !important; /* Ensuring text is visible */
+        font-weight: normal;
+        display: inline-block;
+    }
+    .service-version {
+        font-style: italic;
+    }
+    .service-cpe,
+    .extra-info {
+        color: #888;
+    }
+</style>
 {% endblock %}
