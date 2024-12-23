@@ -10,3 +10,10 @@ RUN if command -v apt-get > /dev/null 2>&1; then \
     fi
 
 RUN pip install -r requirements.txt
+
+ENV FLASK_APP=app.py  # Replace with your app's entry point
+ENV FLASK_ENV=production  # You can also use 'development' for local testing
+
+EXPOSE 5000 
+
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app:app"]
