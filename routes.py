@@ -70,32 +70,32 @@ def whois_search():
 @app.route("/nmap", methods=["GET", "POST"])
 @login_required
 def nmap_scan():
-    result = None
+    scan_result = None
 
     if request.method == "POST":
         target_ip = request.form.get("target_ip")
-        scan_depth = request.form.get("scan_depth") 
+        scan_depth = request.form.get("scan_depth")  # Get the selected scan depth
 
         if target_ip and scan_depth:
             # Run the Nmap scan with the selected scan depth
-            result = run_nmap_scan(target_ip, scan_depth)  # Store the result in 'result'
+            scan_result = run_nmap_scan(target_ip, scan_depth)
 
-            # # Optionally, store the result in the database for history
-            # history = SearchHistory(
-            #     user_id=current_user.id,
-            #     target_ip=target_ip,
-            #     scan_depth=scan_depth,
-            #     result=result,
-            #     timestamp=datetime.utcnow()  # Save timestamp of the scan
-            # )
-            # db.session.add(history)
-            # db.session.commit()
+            # Save search history
+            history = SearchHistory(
+                user_id=current_user.id,  # Link the history to the current user
+                target_ip=target_ip,
+                scan_depth=scan_depth,
+                result=scan_result
+            )
+            db.session.add(history)
+            db.session.commit()
 
+            # Flash a message indicating scan result
             flash(f"Scan completed for {target_ip} with depth: {scan_depth}!", "success")
         else:
             flash("Please provide both IP address and scan depth.", "danger")
 
-    return render_template("nmap_scan.html", scan_result=result)  # Pass 'result' to the template
+    return render_template("nmap_scan.html", scan_result=scan_result)
 
 @app.route("/history")
 @login_required
