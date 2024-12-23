@@ -32,7 +32,7 @@ def virustotal_url():
                 # Pass the result along with the converted datetime to the template
                 return render_template("virustotal_url_result.html", result=result, last_analysis_datetime=last_analysis_datetime)
         else:
-            flash("Failed to scan URL.", "danger")
+                flash("Failed to scan URL.", "danger")
     else:
         flash("Please enter a URL.", "danger")
 
@@ -70,27 +70,27 @@ def whois_search():
 @app.route("/nmap", methods=["GET", "POST"])
 @login_required
 def nmap_scan():
-    result = None  # Initialize result as None, since you want to use 'result'
+    result = None
 
     if request.method == "POST":
         target_ip = request.form.get("target_ip")
-        scan_depth = request.form.get("scan_depth")  # Get the selected scan depth
+        scan_depth = request.form.get("scan_depth") 
 
         if target_ip and scan_depth:
             # Run the Nmap scan with the selected scan depth
             result = run_nmap_scan(target_ip, scan_depth)  # Store the result in 'result'
 
-            history = SearchHistory(
-                user_id=current_user.id,
-                target_ip=target_ip,
-                scan_depth=scan_depth,
-                result=result,  # Now using 'result' here
-                timestamp=datetime.utcnow()
-            )
+            # # Optionally, store the result in the database for history
+            # history = SearchHistory(
+            #     user_id=current_user.id,
+            #     target_ip=target_ip,
+            #     scan_depth=scan_depth,
+            #     result=result,
+            #     timestamp=datetime.utcnow()  # Save timestamp of the scan
+            # )
+            # db.session.add(history)
+            # db.session.commit()
 
-            db.session.add(history)
-            db.session.commit()
-            # Flash a message indicating scan result
             flash(f"Scan completed for {target_ip} with depth: {scan_depth}!", "success")
         else:
             flash("Please provide both IP address and scan depth.", "danger")
@@ -118,6 +118,9 @@ def view_history():
     # Return the template with the history
     return render_template("history.html", history=history)
 
+
+
+
 # Admin route to view users
 @app.route("/admin/users")
 @admin_required
@@ -143,10 +146,11 @@ def edit_user(user_id):
     form = EditUserForm() # Assuming you have a form for editing the user
 
     if form.validate_on_submit():
-        user.email = form.email.data 
+        # If the form is submitted, update the user's information
+        user.email = form.email.data  # Example: Update the email
         db.session.commit()  # Save the changes to the database
         flash("User updated successfully!", "success")
-        return redirect(url_for("view_users"))  
+        return redirect(url_for("view_users"))  # Redirect to the user list page
 
     # Pre-fill the form with existing user data
     form.email.data = user.email
