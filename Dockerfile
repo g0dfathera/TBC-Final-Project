@@ -11,8 +11,8 @@ RUN if command -v apt-get > /dev/null 2>&1; then \
 
 RUN pip install -r requirements.txt
 
-ENV FLASK_APP=app.py  # Replace with your app's entry point
-ENV FLASK_ENV=production  # You can also use 'development' for local testing
+ENV FLASK_APP=app.py  
+ENV FLASK_ENV=production 
 
 EXPOSE 5000 
 
