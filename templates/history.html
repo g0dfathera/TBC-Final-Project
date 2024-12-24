@@ -5,61 +5,68 @@
     </h2>
 
     {% if history.items %}
-    <div class="card shadow-lg mb-4">
+    <div class="card shadow-lg mb-5 border-primary">
         <div class="card-body">
-            <table class="table table-hover table-striped">
-                <thead class="thead-dark">
-                    <tr>
-                        <th>Target</th>
-                        <th>Result</th>
-                        <th>Timestamp</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for entry in history.items %}
-                    <tr>
-                        <td class="font-weight-bold text-success">
-                            {{ entry.scan_type }}
-                        </td>
-                        <td>{{ entry.target_ip }}</td>
-                        <td>
-                            <pre class="bg-light p-2 rounded border">
-{{ entry.result }}</pre
-                            >
-                        </td>
-                        <td>
-                            {{ entry.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+            <!-- Wrap the table in a responsive container -->
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered table-striped">
+                    <thead class="table-dark text-white">
+                        <tr>
+                            <th>Scan Type</th>
+                            <th>Target IP</th>
+                            <th>Result</th>
+                            <th>Timestamp</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for entry in history.items %}
+                        <tr>
+                            <td class="font-weight-bold text-success">
+                                {{ entry.scan_type }}
+                            </td>
+                            <td class="text-muted">{{ entry.target_ip }}</td>
+                            <td>
+                                <!-- Use a div for better wrapping instead of pre tag -->
+                                <div
+                                    class="bg-light p-3 rounded shadow-sm mb-0"
+                                >
+                                    {{ entry.result }}
+                                </div>
+                            </td>
+                            <td class="text-nowrap">
+                                {{ entry.timestamp.strftime('%Y-%m-%d %H:%M:%S')
+                                }}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
     <!-- Pagination Controls -->
-    <div class="d-flex justify-content-between">
+    <div class="d-flex justify-content-between mt-4">
         {% if history.has_prev %}
         <a
             href="{{ url_for('view_history', page=history.prev_num) }}"
-            class="btn btn-outline-secondary"
+            class="btn btn-outline-secondary btn-lg px-4 py-2"
             >Previous</a
         >
         {% endif %} {% if history.has_next %}
         <a
             href="{{ url_for('view_history', page=history.next_num) }}"
-            class="btn btn-outline-primary"
+            class="btn btn-outline-primary btn-lg px-4 py-2"
             >Next</a
         >
         {% endif %}
     </div>
 
     {% else %}
-    <div class="alert alert-info text-center">
+    <div class="alert alert-info text-center mt-5">
         <i class="fas fa-info-circle"></i> You have no scan history yet.
     </div>
     {% endif %}
 </div>
 
-<!-- Add optional Toast Notifications for success or info (if you're using Toast for notifications) -->
 {% endblock %}
