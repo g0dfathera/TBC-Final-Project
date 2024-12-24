@@ -1,5 +1,6 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-lg">
+<nav class="navbar navbar-expand-lg navbar-dark bg-gradient-dark shadow-lg">
     <div class="container">
+        <!-- TBC Logo on the left -->
         <a
             href="https://www.tbceducation.ge/"
             target="_blank"
@@ -11,9 +12,14 @@
                 style="height: 40px; cursor: pointer"
             />
         </a>
-        <a class="navbar-brand" href="/">
-            <i class="bi bi-shield-lock-fill"></i> Penetration Testing
+
+        <!-- Penetration Testing title -->
+        <a class="navbar-brand ms-2" href="/">
+            <i class="bi bi-shield-lock-fill"></i>
+            <strong>Penetration Testing</strong>
         </a>
+
+        <!-- Navbar toggler for mobile view -->
         <button
             class="navbar-toggler"
             type="button"
@@ -25,71 +31,81 @@
         >
             <span class="navbar-toggler-icon"></span>
         </button>
+
+        <!-- Navbar Links -->
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
+                <!-- Learn Dropdown -->
+                <li class="nav-item dropdown">
                     <a
-                        class="nav-link"
-                        href="/security-vulnerabilities"
-                        style="transition: color 0.3s"
-                        >Security Vulnerabilities</a
+                        class="nav-link dropdown-toggle"
+                        href="#"
+                        id="learnDropdown"
+                        role="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
                     >
+                        <i class="bi bi-book"></i> Learn More
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="learnDropdown">
+                        <li>
+                            <a
+                                class="dropdown-item"
+                                href="/security-vulnerabilities"
+                                ><i class="bi bi-shield-lock"></i> Security
+                                Vulnerabilities</a
+                            >
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="/penetration-tools"
+                                ><i class="bi bi-tools"></i> Penetration
+                                Tools</a
+                            >
+                        </li>
+                    </ul>
                 </li>
-                <li class="nav-item">
-                    <a
-                        class="nav-link"
-                        href="/penetration-tools"
-                        style="transition: color 0.3s"
-                        >Penetration Tools</a
-                    >
-                </li>
+
                 {% if current_user.is_authenticated %}
                 <li class="nav-item">
-                    <a
-                        class="nav-link"
-                        href="/nmap"
-                        style="transition: color 0.3s"
-                        >Nmap Scan</a
+                    <a class="nav-link" href="/nmap"
+                        ><i class="bi bi-diagram-2"></i> Nmap Scan</a
                     >
                 </li>
                 <li class="nav-item">
-                    <a
-                        class="nav-link"
-                        href="/whois"
-                        style="transition: color 0.3s"
-                        >WHOIS Scan</a
+                    <a class="nav-link" href="/whois"
+                        ><i class="bi bi-search"></i> WHOIS Scan</a
                     >
                 </li>
                 <li class="nav-item">
-                    <a
-                        class="nav-link"
-                        href="/ipcheck/8.8.8.8"
-                        style="transition: color 0.3s"
-                        >IP Check</a
+                    <a class="nav-link" href="/ipcheck/8.8.8.8"
+                        ><i class="bi bi-check-circle"></i> IP Check</a
                     >
                 </li>
                 <li class="nav-item">
-                    <a
-                        class="nav-link"
-                        href="/virustotal/url"
-                        style="transition: color 0.3s"
-                        >Virustotal Scan</a
+                    <a class="nav-link" href="/virustotal/url"
+                        ><i class="bi bi-shield-lock"></i> Virustotal Scan</a
                     >
                 </li>
-                <!-- Add User History button here -->
                 <li class="nav-item">
-                    <a
-                        class="nav-link"
-                        href="/history"
-                        style="transition: color 0.3s"
-                        >User History</a
+                    <a class="nav-link" href="/history"
+                        ><i class="bi bi-clock-history"></i> User History</a
                     >
                 </li>
                 {% endif %}
             </ul>
+
+            <!-- User Authentication Section -->
             <div class="ms-auto">
                 <ul class="navbar-nav">
-                    {% if current_user.is_authenticated %}
+                    {% if current_user.is_authenticated %} {% if
+                    current_user.is_admin %}
+                    <!-- Admin Button: Visible for Admin users only -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/users"
+                            ><i class="bi bi-person-circle"></i> Admin Panel</a
+                        >
+                    </li>
+                    {% endif %}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('logout') }}">
                             <i class="bi bi-box-arrow-right"></i> Logout
@@ -112,3 +128,45 @@
         </div>
     </div>
 </nav>
+
+<style>
+    .navbar {
+        background: linear-gradient(145deg, #121212, #1c1c1c);
+        border-radius: 8px;
+    }
+
+    .navbar-nav .nav-link {
+        color: #dcdcdc !important;
+        transition: color 0.3s ease;
+    }
+
+    .navbar-nav .nav-link:hover {
+        color: #f39c12 !important;
+    }
+
+    .navbar-nav .nav-link i {
+        margin-right: 8px;
+    }
+
+    .navbar-toggler-icon {
+        background-color: #f39c12;
+    }
+
+    .navbar-toggler:focus {
+        border-color: #f39c12;
+    }
+
+    .dropdown-menu {
+        background-color: #1c1c1c;
+        border-radius: 8px;
+    }
+
+    .dropdown-item:hover {
+        background-color: #f39c12;
+        color: #fff !important;
+    }
+
+    .dropdown-item i {
+        margin-right: 8px;
+    }
+</style>
