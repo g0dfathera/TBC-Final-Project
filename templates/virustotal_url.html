@@ -1,41 +1,73 @@
 {% extends "base.html" %} {% block title %}URL Scan - VirusTotal{% endblock %}
 {% block content %}
 <div class="container my-5">
-    <div class="card border-light shadow-sm">
-        <div class="card-header text-center bg-white">
-            <h4 class="text-primary mb-0">Scan URL with VirusTotal</h4>
+    <div class="card border-0 shadow-xl rounded-lg overflow-hidden">
+        <div
+            class="card-header text-center bg-gradient-to-r from-blue-500 to-indigo-600 text-white py-4"
+        >
+            <h4 class="display-4 font-weight-bold mb-0">
+                Scan URL with VirusTotal
+            </h4>
         </div>
-        <div class="card-body">
-            <form method="POST">
+        <div class="card-body p-5">
+            <form method="POST" class="text-center">
                 <div class="mb-4">
-                    <label for="url" class="form-label fs-5 text-muted"
+                    <label for="url" class="form-label fs-4 text-muted mb-3"
                         >Enter URL to Scan:</label
                     >
-                    <div class="input-group">
-                        <span
-                            class="input-group-text border-0"
-                            style="background-color: #f1f9fc; color: #007bff"
-                        >
-                            <i class="fas fa-link"></i>
+                    <div class="input-group rounded-lg shadow-sm mb-3">
+                        <span class="input-group-text border-0 bg-transparent">
+                            <i class="fas fa-link text-primary"></i>
                         </span>
                         <input
                             type="url"
-                            class="form-control border-0 shadow-sm"
+                            class="form-control border-0 py-3 px-4 rounded-lg shadow-sm"
                             id="url"
                             name="url"
                             placeholder="https://example.com/"
                             required
-                            style="background-color: #f1f9fc; color: #495057"
+                            style="
+                                background-color: #f7fafc;
+                                color: #495057;
+                                font-size: 1.1rem;
+                                transition: all 0.3s ease-in-out;
+                            "
+                            onfocus="this.style.boxShadow='0 4px 8px rgba(0, 123, 255, 0.2)';"
+                            onblur="this.style.boxShadow='none';"
                         />
                     </div>
                 </div>
                 <div class="d-grid">
-                    <button type="submit" class="btn btn-primary btn-lg">
-                        Scan URL
+                    <button
+                        type="submit"
+                        class="btn btn-primary btn-lg py-3 px-5 rounded-full text-uppercase shadow-lg hover:bg-blue-700 transition duration-300 ease-in-out"
+                    >
+                        <i class="fas fa-search me-2"></i> Scan URL
                     </button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+<style>
+    .card {
+        background: linear-gradient(145deg, #ffffff, #f0f4f8);
+    }
+    .card-header {
+        background: linear-gradient(145deg, #3b82f6, #4b5d9c);
+    }
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+    .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #0056b3;
+    }
+    .btn-primary:focus,
+    .btn-primary:active {
+        box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.5);
+    }
+</style>
 {% endblock %}
