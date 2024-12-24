@@ -1,12 +1,35 @@
-{% extends "base.html" %} {% block title %}Edit User{% endblock %} {% block
+{% extends "base.html" %} {% block title %} Edit User {% endblock %} {% block
 content %}
-<h1>Edit User</h1>
-<form method="POST">
-    {{ form.hidden_tag() }}
-    <div class="form-group">
-        <label for="email">Email</label>
-        {{ form.email(class="form-control") }}
+<!-- Page Header -->
+<header class="text-center mb-5">
+    <h1 class="display-4 text-primary font-weight-bold mb-3">Edit User</h1>
+    <p class="lead text-muted">Update the details of the user account below.</p>
+</header>
+
+<!-- Edit User Form -->
+<section>
+    <div class="container">
+        <div class="card shadow-lg rounded-4 border-0">
+            <div class="card-body">
+                <form method="POST">
+                    {{ form.hidden_tag() }}
+
+                    <!-- Email Field -->
+                    <div class="form-group mb-4">
+                        <label for="email" class="h5 text-dark">Email</label>
+                        {{ form.email(class="form-control form-control-lg
+                        rounded-pill") }}
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="form-group text-center">
+                        {{ form.submit(class="btn btn-primary btn-lg
+                        rounded-pill shadow-sm") }}
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-    <div class="form-group">{{ form.submit(class="btn btn-primary") }}</div>
-</form>
+</section>
+
 {% endblock %}
