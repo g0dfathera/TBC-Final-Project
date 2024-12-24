@@ -18,18 +18,17 @@ def datetime_filter(value, format='%Y-%m-%d %H:%M:%S'):
         return value.strftime(format)
     return value
 
+
 @app.route("/virustotal/url", methods=["GET", "POST"])
 @login_required
 def virustotal_url():
     if request.method == "POST":
         url = request.form.get("url")
-        result = scan_url(url)  # Assuming scan_url returns a result as a dictionary
+        result = scan_url(url)
         if result:
-                # Extract the timestamp and convert it
                 timestamp = result['data']['attributes']['last_analysis_date']
                 last_analysis_datetime = datetime.utcfromtimestamp(timestamp)
 
-                # Pass the result along with the converted datetime to the template
                 return render_template("virustotal_url_result.html", result=result, last_analysis_datetime=last_analysis_datetime)
         else:
                 flash("Failed to scan URL.", "danger")
@@ -119,8 +118,6 @@ def view_history():
     return render_template("history.html", history=history)
 
 
-
-
 # Admin route to view users
 @app.route("/admin/users")
 @admin_required
@@ -158,7 +155,6 @@ def edit_user(user_id):
 
 @app.route("/")
 def home():
-    # Example static cybersecurity tips
     tips = [
         "Use a strong and unique password for each account.",
         "Enable two-factor authentication (2FA) wherever possible.",
@@ -167,6 +163,8 @@ def home():
         "Use a VPN for secure browsing, especially on public Wi-Fi.",
         "Regularly back up your important data to a secure location.",
         "Monitor your accounts for unusual activity and report anything suspicious.",
+        "Don't reuse passwords across different accounts.",
+        "Limit the amount of personal information you share on social media."
     ]
 
     # Fetch latest cybersecurity news using NewsAPI
@@ -191,7 +189,7 @@ def home():
         articles = []
 
     # Limit the number of articles to display
-    articles_to_show = articles[:4]  # Show only the first 5 articles
+    articles_to_show = articles[:3]
 
     print("Current user:", current_user.is_authenticated)  # Debug line to check user status
 
