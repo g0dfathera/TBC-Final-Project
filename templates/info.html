@@ -1,23 +1,27 @@
 {% extends "base.html" %} {% block title %} Cybersecurity Tips and News {%
 endblock %} {% block content %}
 <header class="my-5">
-    <h1 class="text-center text-primary">Cybersecurity Tips and News</h1>
+    <h1 class="text-center text-primary display-4 font-weight-bold">
+        Cybersecurity Tips and News
+    </h1>
 </header>
 
 <div class="container">
     <div class="row">
         <!-- Cybersecurity Tips Section -->
         <div class="col-md-6 mb-4">
-            <div class="card shadow-sm">
+            <div class="card shadow-lg border-0 rounded-3">
                 <div class="card-body">
-                    <h3 class="card-title text-center mb-3">
+                    <h3 class="card-title text-center text-dark mb-4">
                         Cybersecurity Tips
                     </h3>
-                    <ul class="list-group">
+                    <ul class="list-group list-group-flush">
                         {% for tip in tips %}
-                        <li class="list-group-item">
-                            <i class="fas fa-lightbulb text-warning"></i> {{ tip
-                            }}
+                        <li
+                            class="list-group-item d-flex align-items-center bg-light border-0 rounded mb-2 shadow-sm"
+                        >
+                            <i class="fas fa-lightbulb text-warning me-3"></i>
+                            {{ tip }}
                         </li>
                         {% endfor %}
                     </ul>
@@ -27,27 +31,28 @@ endblock %} {% block content %}
 
         <!-- Latest Cybersecurity News Section -->
         <div class="col-md-6 mb-4">
-            <div class="card shadow-sm">
+            <div class="card shadow-lg border-0 rounded-3">
                 <div class="card-body">
-                    <h3 class="card-title text-center mb-3">
+                    <h3 class="card-title text-center text-dark mb-4">
                         Latest Cybersecurity News
                     </h3>
-                    <ul class="list-group">
+                    <ul class="list-group list-group-flush">
                         {% for article in articles %}
-                        <li class="list-group-item">
+                        <li
+                            class="list-group-item d-flex flex-column align-items-start bg-light border-0 rounded mb-3 shadow-sm"
+                        >
                             <a
                                 href="{{ article.url }}"
                                 target="_blank"
-                                class="h5 text-decoration-none text-dark"
+                                class="h5 text-decoration-none text-dark mb-2"
                             >
-                                <i class="fas fa-newspaper"></i> {{
+                                <i class="fas fa-newspaper me-2"></i>{{
                                 article.title }}
                             </a>
-                            <br />
                             <small class="text-muted"
                                 >{{ article.publishedAt }}</small
                             >
-                            <p class="mt-2">{{ article.description }}</p>
+                            <p class="mt-2 mb-0">{{ article.description }}</p>
                         </li>
                         {% endfor %}
                     </ul>
@@ -56,5 +61,5 @@ endblock %} {% block content %}
         </div>
     </div>
 </div>
-
 {% endblock %}
+
