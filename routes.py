@@ -101,16 +101,14 @@ def nmap_scan():
 def view_history():
     try:
         # Ensure the page is an integer and provide a fallback to 1 if it's invalid
-        page = request.args.get('page', 1, type=int)  # Get current page number from the query string
+        page = request.args.get('page', 1, type=int)
 
-        # Query the history, limiting results to 3 per page
         history = SearchHistory.query.filter_by(user_id=current_user.id).paginate(page=page, per_page=3, error_out=False)
 
         if not history.items:
             flash("No history found.", "info")
 
     except Exception as e:
-        # Handle any unexpected errors gracefully
         flash(f"An error occurred while retrieving your history: {str(e)}", "danger")
         history = None
 
@@ -128,7 +126,7 @@ def view_users():
 @app.route("/admin/delete_user/<int:user_id>")
 @admin_required
 def delete_user(user_id):
-    user = User.query.get_or_404(user_id)  # Get user by ID
+    user = User.query.get_or_404(user_id)
     db.session.delete(user)
     db.session.commit()  # Commit the deletion to the database
     flash("User deleted successfully!", "danger")
@@ -143,9 +141,8 @@ def edit_user(user_id):
     form = EditUserForm() # Assuming you have a form for editing the user
 
     if form.validate_on_submit():
-        # If the form is submitted, update the user's information
-        user.email = form.email.data  # Example: Update the email
-        db.session.commit()  # Save the changes to the database
+        user.email = form.email.data
+        db.session.commit()
         flash("User updated successfully!", "success")
         return redirect(url_for("view_users"))  # Redirect to the user list page
 
@@ -172,13 +169,11 @@ def home():
     url = f"https://newsapi.org/v2/everything?q=cybersecurity&apiKey={api_key}"
 
     try:
-        # Sending GET request to NewsAPI
         response = requests.get(url)
-        response.raise_for_status()  # Raises an exception for HTTP errors
+        response.raise_for_status()
         news_data = response.json()
         articles = news_data.get("articles", [])
 
-        # Filter out articles with titles like "Removed", "Default Image", or other invalid placeholders
         articles = [
             article
             for article in articles
@@ -193,7 +188,6 @@ def home():
 
     print("Current user:", current_user.is_authenticated)  # Debug line to check user status
 
-    # Pass tips and articles to the template
     return render_template("info.html", articles=articles_to_show, tips=tips, current_user = current_user)
 
 # Route for user registration
@@ -210,7 +204,6 @@ def register():
             flash("Email already registered!", "danger")
             return redirect(url_for("register"))
 
-        # Hash the password before storing it
         hashed_password = generate_password_hash(password)
 
         # Example: Creating a super user with email 'admin@admin.com'
@@ -237,7 +230,7 @@ def login():
         # Check if the user exists in the database
         user = User.query.filter_by(email=email).first()
         if user and check_password_hash(user.password, password):
-            login_user(user)  # This logs in the user and sets up the session
+            login_user(user)
             flash("Login successful!", "success")
             return redirect(url_for("home"))  # Redirect to the home page
         else:
@@ -251,30 +244,25 @@ def logout():
     logout_user()
     return redirect(url_for('home'))
 
-# Route for IP check page (showing an error message)
 @app.route("/ipcheck/")
 @login_required
 def clearcheck():
     return render_template("IP_Error.html")
 
-# Route for displaying information about a specific IP address
 @app.route("/ipcheck/<ip>")
 @login_required
 def ipcheck(ip):
-    ip_info = get_ip_info(ip)  # Assuming you have a function to fetch IP info
+    ip_info = get_ip_info(ip)
     return render_template("ipcheck.html", ip_info=ip_info)
 
-# Route for displaying the security vulnerabilities page
 @app.route("/security-vulnerabilities")
 def security_vulnerabilities():
     return render_template("report.html")
 
-# Route for displaying penetration testing tools
 @app.route("/penetration-tools")
 def penetration_tools():
     return render_template("tools.html")
 
-# Define how Flask-Login loads the user
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
