@@ -7,7 +7,6 @@ import dotenv
 API_KEY = os.getenv("WHOIS_API_KEY")
 
 def is_internal_ip(target_ip):
-    # Implement the internal IP check logic as before
     try:
         private_networks = [
             ipaddress.IPv4Network("10.0.0.0/8"),
@@ -26,22 +25,18 @@ def is_internal_ip(target_ip):
         return False
 
 def run_whois_search(target_ip):
-    # WHOIS lookup logic using the WHOISXMLAPI
     if is_internal_ip(target_ip):
         return "Error: WHOIS lookup for internal IPs is not allowed."
 
     try:
-        # API URL for WHOIS lookup using WHOISXMLAPI
         url = f'https://www.whoisxmlapi.com/whoisserver/WhoisService?apiKey={API_KEY}&domainName={target_ip}&outputFormat=JSON'
 
-        # Send the GET request to WHOISXMLAPI
         response = requests.get(url)
 
         # Check if the response is successful
         if response.status_code == 200:
             whois_data = response.json()
 
-            # Clean the WHOIS data by extracting necessary fields
             def clean_whois_data(whois_data):
                 record = whois_data.get('WhoisRecord', {})
 
@@ -58,7 +53,6 @@ def run_whois_search(target_ip):
                     "Audit Updated Date": record.get('audit', {}).get('updatedDate', 'Not available')
                 }
 
-                # Clean up registrant, technical contact, and administrative contact info
                 registrant = record.get('registryData', {}).get('registrant', {})
                 cleaned_whois["Registrant"] = {
                     "Name": registrant.get('name', 'Not available'),
@@ -79,10 +73,8 @@ def run_whois_search(target_ip):
 
                 return cleaned_whois
 
-            # Clean the WHOIS data and format it
             cleaned_whois = clean_whois_data(whois_data)
 
-            # Organize and beautify the output
             formatted_output = "\n--- WHOIS Lookup Results ---\n"
             for key, value in cleaned_whois.items():
                 if isinstance(value, dict):
@@ -100,6 +92,5 @@ def run_whois_search(target_ip):
     except requests.exceptions.RequestException as e:
         return f"Error: {str(e)}"
 
-# Main function to execute WHOIS search on user input
     whois_info = run_whois_search(target_ip)
     print(whois_info)
