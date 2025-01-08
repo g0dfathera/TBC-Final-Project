@@ -34,6 +34,10 @@ jobs:
             --tag ghcr.io/${{ github.repository_owner }}/my-image-name:${{ github.sha }} \
             .
 
-      - name: Push Docker image to GitHub Container Registry (Public repository)
+      - name: Login to GitHub Container Registry
+        run: |
+          echo ${{ secrets.GHCR_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Push Docker image to GitHub Container Registry
         run: |
           docker push ghcr.io/${{ github.repository_owner }}/my-image-name:${{ github.sha }}
