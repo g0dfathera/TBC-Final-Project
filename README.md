@@ -45,10 +45,22 @@ You can access website on this URL - https://tbc-final-project-1.onrender.com/
    ```
 3. **Run the Docker container:**
 
+   (You must manually create .env file and add API keys to it)
+
+   *Needed keys*
+   ```bash
+   NEWS_API_KEY (Get it from here https://newsapi.org/)
+   SECRET_KEY (You can write it yourself)
+   DATABASE_URL = sqlite:///users.db
+   WHOIS_API_KEY (Get it from here https://whois.whoisxmlapi.com/)
+   VIRUSTOTAL_API_KEY (Get it from here https://virustotal.com/)
+   ```
+   Also, if you want to, you can use linux tool "whois" for scanning (instead of using API). you can see Code for this in my github repos.
+
    ```bash
    docker run -p 5000:5000 penetration-tools-website
    ```
-4. **Visit the web application in your browser at http://localhost:5000**
+5. **Visit the web application in your browser at http://localhost:5000**
 
 ### License
 
