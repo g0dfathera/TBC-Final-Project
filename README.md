@@ -55,7 +55,7 @@ You can access website on this URL - https://tbc-final-project-1.onrender.com/
    WHOIS_API_KEY (Get it from here https://whois.whoisxmlapi.com/)
    VIRUSTOTAL_API_KEY (Get it from here https://virustotal.com/)
    ```
-   Also, if you want to, you can use linux tool "whois" for scanning (instead of using API). you can see Code for this in my github repos.
+   Also, if you want to, you can use linux tool "whois" for scanning (instead of using API). you can see Code for this here https://github.com/g0dfathera/whois.
 
    ```bash
    docker run -p 5000:5000 penetration-tools-website
