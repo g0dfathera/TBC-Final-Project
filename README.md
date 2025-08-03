@@ -26,7 +26,7 @@ You can access website on this URL - https://tbc-final-project-1.onrender.com/
 
 ### Requirements
 
-- Docker (for cross-platform compatibility on Windows)
+- Docker (for cross-platform compatibility and easy deploiment)
 - Python 3.x
 - Pip
 
